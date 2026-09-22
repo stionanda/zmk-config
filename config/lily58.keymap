@@ -149,11 +149,6 @@
 
     };
 
-    /* Caps-word: don't break the streak on _, -, Backspace */
-    &caps_word {
-        continue-list = <UNDERSCORE MINUS BACKSPACE>;
-    };
-
     combos {
         compatible = "zmk,combos";
 
@@ -299,4 +294,9 @@
             >;
         };
     };
+};
+
+/* Caps-word: don't break the streak on _, -, Backspace */
+&caps_word {
+    continue-list = <UNDERSCORE MINUS BACKSPACE>;
 };
