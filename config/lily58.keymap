@@ -1,12 +1,19 @@
 /*
- * Lily58 keymap — QWERTY + home row mods, tuned for macOS
- * Use cases: coding, Excel, YouTube/browsing without a mouse
+ * Lily58 keymap — adapted from Townk's zmk-config (github.com/Townk/zmk-config)
+ * for stock ZMK v0.3.0 / mainline Lily58 (58 keys: 4 rows of 12/12/12/14 +
+ * thumb row of 8). Layout matches the user's own keymap-drawer reference
+ * diagrams exactly. Forced substitutions for stock hardware + mainline
+ * firmware (Townk's repo depends on his own ZMK fork for a few features):
+ *   - No Colemak layer (QWERTY only, by request).
+ *   - &molock (his forked layer-lock behavior) replaced with &tog.
+ *   - Mouse layer uses stock &mkp/&msc/&mmv instead of his forked pointer
+ *     behaviors.
+ *   - App/window switcher uses plain &mt hold-Cmd instead of the
+ *     zmk-tri-state fork behavior.
+ *   - No rotary encoder sensor-bindings (none wired on this board).
  *
- * Layers:
- *   0 default_layer - QWERTY with home row mods (GACS on both hands)
- *   1 lower_layer   - numbers + symbols (held from left thumb)
- *   2 raise_layer   - nav / mouse keys / media (held from right thumb)
- *   3 adjust_layer  - Bluetooth, reset, function keys (Lower+Raise together)
+ * Layers: 0 Main  1 Nav  2 Numbers  3 Symbols  4 Media
+ *         5 Mouse  6 Functions  7 Layer7  8 Layer8
  */
 
 #include <behaviors.dtsi>
@@ -15,19 +22,50 @@
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/mouse.h>
 
+#define MAIN 0
+#define NAV  1
+#define NUM  2
+#define SYM  3
+#define MED  4
+#define MOU  5
+#define FUN  6
+#define L7   7
+#define L8   8
+
+/* ---- macOS shortcut aliases ---- */
+#define MAC_CUT        LG(X)
+#define MAC_COPY       LG(C)
+#define MAC_PASTE      LG(V)
+#define MAC_UNDO       LG(Z)
+#define MAC_REDO       LG(LS(Z))
+#define MAC_SPOTLIGHT  LG(SPACE)
+#define MAC_LAUNCHPAD  LA(F4)
+#define MAC_MSNCTRL    C_AC_DESKTOP_SHOW_ALL_WINDOWS
+#define MAC_APPWIN     LG(LC(DOWN))
+#define MAC_FINDNEXT   LG(G)
+#define MAC_FINDPREV   LG(LS(G))
+#define MAC_WORDNEXT   LA(RIGHT)
+#define MAC_WORDPREV   LA(LEFT)
+#define MAC_LINESTART  LG(LEFT)
+#define MAC_LINEEND    LG(RIGHT)
+#define MAC_NEXTDESK   LG(LC(RIGHT))
+#define MAC_PREVDESK   LG(LC(LEFT))
+
+/* ---- Hyper / Meh (row 4, 7th key each side) ---- */
+#define LEFT_HYPER  LS(LA(LC(LGUI)))
+#define RIGHT_HYPER RS(RA(RC(RGUI)))
+
 / {
     behaviors {
-        /* Home row mods: tap = letter, hold = modifier.
-         * tapping-term-ms/quick-tap-ms tuned to avoid misfires during
-         * normal-speed typing; require-prior-idle-ms keeps fast rolling
-         * keystrokes registering as taps instead of accidental holds. */
+        /* Home row mods */
         hml: homerow_mods_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             tapping-term-ms = <200>;
-            quick-tap-ms = <150>;
-            require-prior-idle-ms = <125>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <100>;
             flavor = "balanced";
+            hold-trigger-on-release;
             bindings = <&kp>, <&kp>;
         };
 
@@ -35,77 +73,229 @@
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             tapping-term-ms = <200>;
-            quick-tap-ms = <150>;
-            require-prior-idle-ms = <125>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <100>;
             flavor = "balanced";
+            hold-trigger-on-release;
             bindings = <&kp>, <&kp>;
+        };
+
+        /* Shift-specific home row mods: no require-prior-idle-ms */
+        hsl: homerow_shift_left {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <175>;
+            flavor = "balanced";
+            hold-trigger-on-release;
+            bindings = <&kp>, <&kp>;
+        };
+
+        hsr: homerow_shift_right {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <175>;
+            flavor = "balanced";
+            hold-trigger-on-release;
+            bindings = <&kp>, <&kp>;
+        };
+
+        /* Autoshift: tap = key, hold = Shift+key */
+        as: auto_shift {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        /* Backspace / Nav-layer: tap = Backspace, hold = momentary Nav */
+        bspc_nav: bspc_nav {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "balanced";
+            bindings = <&kp>, <&mo>;
+        };
+
+        /* Space / Numbers-layer: tap = Space, hold = momentary Numbers */
+        spc_num: spc_num {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "balanced";
+            bindings = <&kp>, <&mo>;
+        };
+
+        /* Mod-morph: \ key sends Globe-layer-tap while nothing special;
+         * left/right outer row-4 keys hold Globe via plain &mt below */
+
+        /* Tap-dance: single tap = momentary layer, double tap = lock it on */
+        td_l7: td_l7 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&mo L7>, <&tog L7>;
+        };
+
+        td_l8: td_l8 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&mo L8>, <&tog L8>;
+        };
+
+    };
+
+    /* Caps-word: don't break the streak on _, -, Backspace */
+    &caps_word {
+        continue-list = <UNDERSCORE MINUS BACKSPACE>;
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        /* Hold both index-finger home row mod keys (F and J) = Caps Word */
+        combo_caps_word {
+            timeout-ms = <75>;
+            key-positions = <28 31>;
+            layers = <MAIN>;
+            bindings = <&caps_word>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-// ------------------------------------------------------------------------------------------------------------
-// |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |  BSPC |
-// |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BSLH  |
-// | CTRL  |A/Sft|S/Ctl|D/Alt |F/Gui |  G   |                   |  H   |J/Gui  |K/Alt  |L/Ctl |;/Sft  |   '   |
-// | SHIFT |  Z  |  X  |  C   |  V   |  B   |   "["  |  |  "]"  |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-//                     | ALT  | GUI  | LOWER|  SPACE |  | ENTER | RAISE| RCTRL | RALT  |
-        default_layer {
+// ============================================================
+// LAYER 0 — MAIN (QWERTY)
+// ============================================================
+// | {[⌘`| 1! | 2@ | 3# | 4$ | 5% |                | 6^ | 7& | 8* | 9( | 0) | }] |
+// | Tab  | Q  | W  | E  | R  | T  |                | Y  | U  | I  | O  | P  | _- |
+// | ~    |A/^ |S/⌥ |D/⌘ |F/⇧ | G  |                | H  |J/⇧ |K/⌘ |L/⌥ | ;/^| "' |
+// |\/Glob| Z/5| X  | C  |V/⇧V| B  | HYPER || HYPER | N  | M  | ,< | .> |//? |=/Gl|
+//              L8   L7  Bspc/1  Esc/3           Ret/4  Spc/2   L7   L8
+        main_layer {
             bindings = <
-&kp ESC   &kp N1     &kp N2     &kp N3      &kp N4      &kp N5                             &kp N6  &kp N7      &kp N8      &kp N9      &kp N0     &kp BSPC
-&kp TAB   &kp Q      &kp W      &kp E       &kp R       &kp T                              &kp Y   &kp U       &kp I       &kp O       &kp P      &kp BSLH
-&kp LCTRL &hml LSHFT A &hml LCTRL S &hml LALT D &hml LGUI F &kp G                           &kp H   &hmr RGUI J &hmr RALT K &hmr RCTRL L &hmr RSHFT SEMI &kp SQT
-&kp LSHFT &kp Z      &kp X      &kp C       &kp V       &kp B      &kp LBKT   &kp RBKT     &kp N   &kp M       &kp COMMA   &kp DOT     &kp FSLH   &kp RSHFT
-                                 &kp LALT    &kp LGUI    &mo 1      &kp SPACE  &kp RET      &mo 2   &kp RCTRL   &kp RALT
+&kp LBKT             &kp N1 &kp N2 &kp N3 &kp N4 &kp N5                                                          &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp RBKT
+&kp TAB              &kp Q     &kp W     &kp E     &kp R     &kp T                                              &kp Y     &kp U     &kp I     &kp O     &kp P     &kp MINUS
+&kp GRAVE            &hml LCTRL A &hml LALT S &hml LGUI D &hsl LSHFT F &kp G                                    &kp H     &hsr RSHFT J &hmr RGUI K &hmr RALT L &hmr RCTRL SEMI &kp SQT
+&mt GLOBE BSLH       &mo MOU   &kp X     &kp C     &as LSHFT V &kp B     &kp LEFT_HYPER                        &kp RIGHT_HYPER &kp N &kp M &kp COMMA &kp DOT &kp FSLH &mt GLOBE EQUAL
+                                &td_l8    &td_l7    &bspc_nav NAV BSPC &lt SYM ESC        &lt MED RET &spc_num NUM SPACE &td_l7 &td_l8
             >;
         };
 
-// ------------------------------------------------------------------------------------------------------------
-// |  `    | F1  | F2  | F3   | F4   | F5   |                   | F6   | F7    | F8    | F9   |  F10  |  DEL  |
-// |  ~    |  !  |  @  |  #   |  $   |  %   |                   |  ^   |  &    |  *    |  (   |   )   |  |    |
-// | trans |  -  |  =  |  _   |  +   |  [   |                   |  ]   |  :    |  "    |  <   |   >   |  ?    |
-// | trans | trans|trans| trans| trans| trans|  trans |  trans  |trans | trans | trans | trans| trans | trans |
-//                     | trans| trans| trans| trans  |  trans  |trans | trans | trans |
-        lower_layer {
+// ============================================================
+// LAYER 1 — NAV
+// ============================================================
+// hold Backspace key (left thumb) for this layer
+        nav_layer {
             bindings = <
-&kp GRAVE  &kp F1    &kp F2    &kp F3    &kp F4    &kp F5                              &kp F6    &kp F7    &kp F8    &kp F9    &kp F10   &kp DEL
-&kp TILDE  &kp EXCL  &kp AT    &kp HASH  &kp DLLR  &kp PRCNT                          &kp CARET &kp AMPS  &kp STAR  &kp LPAR  &kp RPAR  &kp PIPE
-&trans     &kp MINUS &kp EQUAL &kp UNDER &kp PLUS  &kp LBRC                          &kp RBRC  &kp COLON &kp DQT   &kp LT    &kp GT    &kp QMARK
-&trans     &trans    &trans    &trans    &trans    &trans   &trans     &trans       &trans    &trans    &trans    &trans    &trans    &trans
-                                &trans    &trans    &trans   &trans     &trans       &trans    &trans    &trans
+&mt LGUI GRAVE &kp LG(N1) &kp LG(N2) &kp LG(N3) &kp LG(N4) &kp LG(N5)                                            &none     &kp HOME &kp LG(LS(N3)) &kp LG(LS(N4)) &kp END &none
+&mt LGUI TAB   &kp LG(Q) &kp LG(W) &kp LG(E) &kp LG(R) &kp LG(T)                                                 &none     &kp MAC_FINDPREV &kp UP    &kp MAC_FINDNEXT &kp TAB &none
+&mt LGUI GRAVE &mt LGUI LG(A) &mt LALT LG(S) &mt LGUI LG(D) &mt LSHFT LG(F) &kp LG(G)                            &none     &kp LEFT  &kp DOWN  &kp RIGHT &kp MAC_APPWIN &none
+&mt LGUI GRAVE &kp LG(Z) &kp LG(X) &kp LG(C) &kp LG(V) &kp LG(B) &none                                &none      &none     &kp MAC_WORDPREV &kp MAC_LINESTART &kp MAC_LINEEND &kp MAC_WORDNEXT &none
+                         &none     &none     &none     &tog NAV                                                  &none     &none     &none     &none
             >;
         };
 
-// ------------------------------------------------------------------------------------------------------------
-// | F11   | F12 | trans|trans |trans |trans |                   |trans | trans | trans | trans| trans | trans |
-// | INS   |trans|trans|SPOTLT|trans |trans |                   |PG_UP |HOME   |  UP   |END   | trans | trans |
-// | trans |trans|LALT |LGUI |trans |trans |                    |PG_DN |LEFT   | DOWN  |RIGHT | trans | trans |
-// | trans |trans|trans|LCLK |RCLK  |MCLK  | SCRL_UP| SCRL_DOWN |LCLK  |RCLK   | trans | trans| trans | trans |
-//                     |trans|trans |trans | trans  |  trans    |VOL_DN|VOL_UP | trans |
-        raise_layer {
+// ============================================================
+// LAYER 2 — NUMBERS
+// ============================================================
+// hold Space key (right thumb) for this layer
+        num_layer {
             bindings = <
-&kp F11   &kp F12  &trans   &trans      &trans   &trans                                &trans    &trans     &trans    &trans     &trans   &trans
-&kp INS   &trans   &trans   &kp LG(LS(N3)) &trans &trans                               &kp PG_UP &kp HOME   &kp UP    &kp END    &trans   &trans
-&trans    &trans   &kp LALT &kp LGUI    &trans   &trans                                &kp PG_DN &kp LEFT   &kp DOWN  &kp RIGHT  &trans   &trans
-&trans    &trans   &trans   &mkp LCLK   &mkp RCLK &mkp MCLK  &msc SCRL_UP &msc SCRL_DOWN &mkp LCLK &mkp RCLK  &trans    &trans     &trans   &trans
-                             &trans      &trans    &trans     &trans       &trans      &kp C_VOL_DN &kp C_VOL_UP &trans
+&none     &kp LBKT  &kp STAR  &kp FSLH  &kp RBKT  &kp CARET                                                     &none     &none     &none     &none     &none     &none
+&kp TAB   &kp N1    &kp N2    &kp N3    &kp N4    &kp N5                                                        &none     &none     &none     &none     &none     &none
+&kp RET   &kp N6    &kp N7    &kp N8    &kp N9    &kp N0                                                        &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
+&none     &kp LPAR  &kp PLUS  &kp MINUS &kp RPAR  &kp DOT   &none                                    &none      &none     &none     &none     &none     &none     &kp EQUAL
+                    &tog NUM  &none     &kp COMMA &kp BSPC                                                       &kp RET   &none     &none     &none
             >;
         };
 
-// ------------------------------------------------------------------------------------------------------------
-// |BT_CLR | none| none| none |none  | none |                   | none | none  | none  | none | none  | none  |
-// | none  |BTSEL0|BTSEL1|BTSEL2|BTSEL3|none |                   | none | none  | none  | none | none  | none  |
-// | none  | none| none| none |none  | none |                   | none | none  | none  | none | none  | none  |
-// | none  | none| none| none |none  | none | BT_DISC0|  none    | none | none  | none  | none | none  | none  |
-//                     | none| none |none  | none    |  none    | none | none  | none  |
-        adjust_layer {
+// ============================================================
+// LAYER 3 — SYMBOLS
+// ============================================================
+// hold Esc key (left thumb) for this layer
+        sym_layer {
             bindings = <
-&bt BT_CLR &none      &none      &none      &none      &none                          &none  &none  &none  &none  &none  &none
-&none      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &none                    &none  &none  &none  &none  &none  &none
-&none      &none      &none      &none      &none      &none                          &none  &none  &none  &none  &none  &none
-&none      &none      &none      &none      &none      &none   &bt BT_DISC 0 &none    &none  &none  &none  &none  &none  &none
-                                  &none      &none      &none   &none         &none    &none  &none  &none
+&none     &none     &none     &none     &none     &none                                                        &kp QMARK &kp PLUS  &kp MINUS &kp DOT   &kp FSLH  &kp BSLH
+&none     &none     &none     &none     &none     &none                                                        &kp AMPS  &kp LT    &kp EQUAL &kp GT    &kp PIPE  &kp HASH
+&none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &none                                                         &kp LBKT  &kp LPAR  &kp COLON &kp RPAR  &kp RBKT  &kp PRCNT
+&none     &none     &none     &none     &none     &none     &none                                    &none      &kp DLLR  &kp LBRC  &kp STAR  &kp RBRC  &kp CARET &kp EXCL
+                    &none     &none     &none     &tog SYM                                                       &kp AT    &kp SPACE &none     &none
+            >;
+        };
+
+// ============================================================
+// LAYER 4 — MEDIA
+// ============================================================
+// hold Enter key (right thumb) for this layer
+        med_layer {
+            bindings = <
+&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
+&kp C_VOL_UP &kp C_BRI_UP &none &none &none &none                                                                &none     &none     &none     &none     &none     &none
+&kp C_VOL_DN &kp C_BRI_DN &kp C_PREV &kp C_PP &kp C_NEXT &none                                                    &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
+&kp C_MUTE &none     &none     &none     &none     &none     &none                                    &none      &none     &none     &none     &none     &none     &none
+                    &none     &none     &none     &kp C_STOP                                                     &tog MED  &none     &none     &none
+            >;
+        };
+
+// ============================================================
+// LAYER 5 — MOUSE
+// ============================================================
+// hold Z key (left, next to A) for this layer
+        mou_layer {
+            bindings = <
+&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
+&none     &mkp MB4  &mkp MB3  &mkp MB2  &mkp MB1  &mkp MB5                                                      &none     &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_UNDO &none
+&none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &none                                                         &none     &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none
+&none     &none     &none     &none     &none     &none     &none                                    &none      &none     &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none
+                    &none     &none     &none     &none                                                          &mkp MB1  &mkp MB2  &tog MOU  &none
+            >;
+        };
+
+// ============================================================
+// LAYER 6 — FUNCTIONS
+// ============================================================
+// hold / key (right, next to .) for this layer
+        fun_layer {
+            bindings = <
+&none     &kp F16   &kp F17   &kp F18   &kp F19   &kp F20                                                       &none     &none     &none     &none     &none     &none
+&none     &kp F11   &kp F12   &kp F13   &kp F14   &kp F15                                                       &none     &none     &none     &none     &none     &none
+&none     &kp F6    &kp F7    &kp F8    &kp F9    &kp F10                                                       &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
+&none     &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &none                                     &none      &none     &none     &none     &none     &none     &none
+                    &none     &none     &none     &none                                                          &none     &none     &none     &tog FUN
+            >;
+        };
+
+// ============================================================
+// LAYER 7 — LAYER7 (mirrored both sides — macOS window/app shortcuts)
+// ============================================================
+// tap outer-second thumb key for momentary, double-tap for lock
+        l7_layer {
+            bindings = <
+&none     &kp LS(TAB) &kp MAC_FINDPREV &kp MAC_FINDNEXT &kp TAB &kp MAC_LAUNCHPAD                              &kp MAC_LAUNCHPAD &kp LS(TAB) &kp MAC_FINDPREV &kp MAC_FINDNEXT &kp TAB &none
+&none     &kp MAC_PREVDESK &kp MAC_WORDPREV &kp MAC_WORDNEXT &kp MAC_NEXTDESK &kp MAC_APPWIN                    &kp MAC_APPWIN &kp MAC_PREVDESK &kp MAC_WORDPREV &kp MAC_WORDNEXT &kp MAC_NEXTDESK &none
+&none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &kp MAC_MSNCTRL                                                &kp MAC_MSNCTRL &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
+&none     &kp MAC_UNDO &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_SPOTLIGHT &none                 &none      &kp MAC_SPOTLIGHT &kp MAC_PASTE &kp MAC_COPY &kp MAC_CUT &kp MAC_UNDO &none
+                    &tog L7   &none     &none     &none                                                          &none     &none     &none     &tog L7
+            >;
+        };
+
+// ============================================================
+// LAYER 8 — LAYER8 (system: bootloader/reset left, Bluetooth right)
+// ============================================================
+// tap outermost thumb key for momentary, double-tap for lock
+        l8_layer {
+            bindings = <
+&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
+&bootloader &none   &none     &none     &none     &ext_power EP_TOG                                             &none     &none     &none     &none     &none     &bootloader
+&sys_reset &none    &none     &none     &none     &out OUT_TOG                                                  &none     &none     &none     &none     &none     &sys_reset
+&none     &none     &none     &none     &none     &kp C_PWR &none                                    &none      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR &kp C_PWR
+                    &tog L8   &none     &none     &none                                                          &none     &none     &none     &tog L8
             >;
         };
     };
