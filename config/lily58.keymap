@@ -81,14 +81,14 @@
 // | F11   | F12 | trans|trans |trans |trans |                   |trans | trans | trans | trans| trans | trans |
 // | INS   |trans|trans|SPOTLT|trans |trans |                   |PG_UP |HOME   |  UP   |END   | trans | trans |
 // | trans |trans|LALT |LGUI |trans |trans |                    |PG_DN |LEFT   | DOWN  |RIGHT | trans | trans |
-// | trans |trans|trans|LCLK |RCLK  |MCLK  | SCR_UP | SCR_DN    |LCLK  |RCLK   | trans | trans| trans | trans |
+// | trans |trans|trans|LCLK |RCLK  |MCLK  | SCRL_UP| SCRL_DOWN |LCLK  |RCLK   | trans | trans| trans | trans |
 //                     |trans|trans |trans | trans  |  trans    |VOL_DN|VOL_UP | trans |
         raise_layer {
             bindings = <
 &kp F11   &kp F12  &trans   &trans      &trans   &trans                                &trans    &trans     &trans    &trans     &trans   &trans
 &kp INS   &trans   &trans   &kp LG(LS(N3)) &trans &trans                               &kp PG_UP &kp HOME   &kp UP    &kp END    &trans   &trans
 &trans    &trans   &kp LALT &kp LGUI    &trans   &trans                                &kp PG_DN &kp LEFT   &kp DOWN  &kp RIGHT  &trans   &trans
-&trans    &trans   &trans   &mkp LCLK   &mkp RCLK &mkp MCLK  &msc SCRL_UP &msc SCRL_DN &mkp LCLK &mkp RCLK  &trans    &trans     &trans   &trans
+&trans    &trans   &trans   &mkp LCLK   &mkp RCLK &mkp MCLK  &msc SCRL_UP &msc SCRL_DOWN &mkp LCLK &mkp RCLK  &trans    &trans     &trans   &trans
                              &trans      &trans    &trans     &trans       &trans      &kp C_VOL_DN &kp C_VOL_UP &trans
             >;
         };
