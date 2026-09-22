@@ -283,10 +283,12 @@
 // LAYER 8 — LAYER8 (system: bootloader/reset left, Bluetooth right)
 // ============================================================
 // tap outermost thumb key for momentary, double-tap for lock
+// Row 1: layer-lock keys — tap to jump to that layer and STAY there
+// (no holding needed); tap "BAS" to return to the base layer.
         l8_layer {
             display-name = "8-SYS";
             bindings = <
-&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
+&to NAV   &to NUM   &to SYM   &to MED   &to MOU   &to FUN                                                        &to MAIN &none     &none     &none     &none     &none
 &bootloader &none   &none     &none     &none     &ext_power EP_TOG                                             &none     &none     &none     &none     &none     &bootloader
 &sys_reset &none    &none     &none     &none     &out OUT_TOG                                                  &none     &none     &none     &none     &none     &sys_reset
 &none     &none     &none     &none     &none     &kp C_PWR &none                                    &none      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR &kp C_PWR
