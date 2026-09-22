@@ -174,6 +174,7 @@
 // |\/Glob| Z/5| X  | C  |V/⇧V| B  | HYPER || HYPER | N  | M  | ,< | .> |//? |=/Gl|
 //              L8   L7  Bspc/1  Esc/3           Ret/4  Spc/2   L7   L8
         main_layer {
+            display-name = "Base";
             bindings = <
 &kp LBKT             &kp N1 &kp N2 &kp N3 &kp N4 &kp N5                                                          &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp RBKT
 &kp TAB              &kp Q     &kp W     &kp E     &kp R     &kp T                                              &kp Y     &kp U     &kp I     &kp O     &kp P     &kp MINUS
@@ -188,6 +189,7 @@
 // ============================================================
 // hold Backspace key (left thumb) for this layer
         nav_layer {
+            display-name = "Nav";
             bindings = <
 &mt LGUI GRAVE &kp LG(N1) &kp LG(N2) &kp LG(N3) &kp LG(N4) &kp LG(N5)                                            &none     &kp HOME &kp LG(LS(N3)) &kp LG(LS(N4)) &kp END &none
 &mt LGUI TAB   &kp LG(Q) &kp LG(W) &kp LG(E) &kp LG(R) &kp LG(T)                                                 &none     &kp MAC_FINDPREV &kp UP    &kp MAC_FINDNEXT &kp TAB &none
@@ -202,6 +204,7 @@
 // ============================================================
 // hold Space key (right thumb) for this layer
         num_layer {
+            display-name = "Num";
             bindings = <
 &none     &kp LBKT  &kp STAR  &kp FSLH  &kp RBKT  &kp CARET                                                     &none     &none     &none     &none     &none     &none
 &kp TAB   &kp N1    &kp N2    &kp N3    &kp N4    &kp N5                                                        &none     &none     &none     &none     &none     &none
@@ -216,6 +219,7 @@
 // ============================================================
 // hold Esc key (left thumb) for this layer
         sym_layer {
+            display-name = "Sym";
             bindings = <
 &none     &none     &none     &none     &none     &none                                                        &kp QMARK &kp PLUS  &kp MINUS &kp DOT   &kp FSLH  &kp BSLH
 &none     &none     &none     &none     &none     &none                                                        &kp AMPS  &kp LT    &kp EQUAL &kp GT    &kp PIPE  &kp HASH
@@ -230,6 +234,7 @@
 // ============================================================
 // hold Enter key (right thumb) for this layer
         med_layer {
+            display-name = "Media";
             bindings = <
 &none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
 &kp C_VOL_UP &kp C_BRI_UP &none &none &none &none                                                                &none     &none     &none     &none     &none     &none
@@ -244,6 +249,7 @@
 // ============================================================
 // hold Z key (left, next to A) for this layer
         mou_layer {
+            display-name = "Mouse";
             bindings = <
 &none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
 &none     &mkp MB4  &mkp MB3  &mkp MB2  &mkp MB1  &mkp MB5                                                      &none     &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_UNDO &none
@@ -258,6 +264,7 @@
 // ============================================================
 // hold / key (right, next to .) for this layer
         fun_layer {
+            display-name = "Func";
             bindings = <
 &none     &kp F16   &kp F17   &kp F18   &kp F19   &kp F20                                                       &none     &none     &none     &none     &none     &none
 &none     &kp F11   &kp F12   &kp F13   &kp F14   &kp F15                                                       &none     &none     &none     &none     &none     &none
@@ -272,6 +279,7 @@
 // ============================================================
 // tap outer-second thumb key for momentary, double-tap for lock
         l7_layer {
+            display-name = "Shortcuts";
             bindings = <
 &none     &kp LS(TAB) &kp MAC_FINDPREV &kp MAC_FINDNEXT &kp TAB &kp MAC_LAUNCHPAD                              &kp MAC_LAUNCHPAD &kp LS(TAB) &kp MAC_FINDPREV &kp MAC_FINDNEXT &kp TAB &none
 &none     &kp MAC_PREVDESK &kp MAC_WORDPREV &kp MAC_WORDNEXT &kp MAC_NEXTDESK &kp MAC_APPWIN                    &kp MAC_APPWIN &kp MAC_PREVDESK &kp MAC_WORDPREV &kp MAC_WORDNEXT &kp MAC_NEXTDESK &none
@@ -286,6 +294,7 @@
 // ============================================================
 // tap outermost thumb key for momentary, double-tap for lock
         l8_layer {
+            display-name = "System";
             bindings = <
 &none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
 &bootloader &none   &none     &none     &none     &ext_power EP_TOG                                             &none     &none     &none     &none     &none     &bootloader
