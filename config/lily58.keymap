@@ -112,48 +112,13 @@
             bindings = <&kp>, <&kp>;
         };
 
-        /* Backspace / Nav-layer: tap = Backspace, hold = momentary Nav.
-         * flavor = hold-preferred so holding this key ALONE (no other key
-         * pressed) still resolves to hold after tapping-term-ms — with
-         * "balanced" it only resolves to hold if another key is pressed
-         * during the hold, otherwise it falls back to tap (and repeats).
-         * tapping-term raised to 280ms (from 200) so normal fast typing
-         * doesn't misfire into the layer; a quick tap still resolves
-         * immediately on release, so normal typing latency is unaffected. */
-        bspc_nav: bspc_nav {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <280>;
-            flavor = "hold-preferred";
-            bindings = <&kp>, <&mo>;
-        };
-
-        /* Space / Numbers-layer: tap = Space, hold = momentary Numbers */
-        spc_num: spc_num {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <280>;
-            flavor = "hold-preferred";
-            bindings = <&kp>, <&mo>;
-        };
-
-        /* Z / Mouse-layer: tap = Z, hold = momentary Mouse */
-        z_mou: z_mou {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <280>;
-            flavor = "hold-preferred";
-            bindings = <&kp>, <&mo>;
-        };
-
-        /* Slash / Functions-layer: tap = /, hold = momentary Functions */
-        fslh_fun: fslh_fun {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <280>;
-            flavor = "hold-preferred";
-            bindings = <&kp>, <&mo>;
-        };
+        /* Backspace/Nav, Space/Numbers, Z/Mouse, and Slash/Functions all
+         * use the built-in &lt (layer-tap) behavior instead of a custom
+         * hold-tap — see the &lt tapping-term-ms override near the end of
+         * this file. &lt is battle-tested (it's what powers Esc/Symbols
+         * and Enter/Media, which already work correctly) and uses
+         * bindings = <&mo>, <&kp>; with flavor "tap-preferred", the
+         * standard ZMK pattern for tap-a-key/hold-a-layer keys. */
 
         /* Mod-morph: \ key sends Globe-layer-tap while nothing special;
          * left/right outer row-4 keys hold Globe via plain &mt below */
@@ -204,8 +169,8 @@
 &kp LBKT             &kp N1 &kp N2 &kp N3 &kp N4 &kp N5                                                          &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp RBKT
 &kp TAB              &kp Q     &kp W     &kp E     &kp R     &kp T                                              &kp Y     &kp U     &kp I     &kp O     &kp P     &kp MINUS
 &kp GRAVE            &hml LCTRL A &hml LALT S &hml LGUI D &hsl LSHFT F &kp G                                    &kp H     &hsr RSHFT J &hmr RGUI K &hmr RALT L &hmr RCTRL SEMI &kp SQT
-&mt GLOBE BSLH       &z_mou Z MOU &kp X  &kp C     &as LSHFT V &kp B     &kp LEFT_HYPER                        &kp RIGHT_HYPER &kp N &kp M &kp COMMA &kp DOT &fslh_fun FSLH FUN &mt GLOBE EQUAL
-                                &td_l8    &td_l7    &bspc_nav BSPC NAV &lt SYM ESC        &lt MED RET &spc_num SPACE NUM &td_l7 &td_l8
+&mt GLOBE BSLH       &lt MOU Z &kp X    &kp C     &as LSHFT V &kp B     &kp LEFT_HYPER                        &kp RIGHT_HYPER &kp N &kp M &kp COMMA &kp DOT &lt FUN FSLH &mt GLOBE EQUAL
+                                &td_l8    &td_l7    &lt NAV BSPC &lt SYM ESC        &lt MED RET &lt NUM SPACE &td_l7 &td_l8
             >;
         };
 
