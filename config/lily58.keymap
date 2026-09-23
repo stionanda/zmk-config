@@ -152,56 +152,65 @@
         };
 
         /* Layer locks: hold a layer-tap key (Nav/Numbers/Mouse/Functions),
-         * then tap either Globe key while still holding it — locks that
-         * layer on persistently (&to). Gated on MAIN (not the target
-         * layer), since the target layer only becomes active AFTER the
-         * layer-tap key's hold resolves — ZMK evaluates a combo's `layers`
-         * restriction at the moment the FIRST key is pressed, so gating on
-         * the not-yet-active target layer would never match. */
+         * then hold either Globe key down too, while still holding the
+         * first — locks that layer on persistently (&to). Gated on MAIN
+         * (not the target layer), since the target layer only becomes
+         * active AFTER the layer-tap key's hold resolves — ZMK evaluates a
+         * combo's `layers` restriction once, at the moment the FIRST key
+         * is pressed, so gating on the not-yet-active target layer would
+         * never match.
+         *
+         * timeout-ms is deliberately generous (500ms): ZMK's combo timer
+         * starts counting from the FIRST key's press, not from when both
+         * keys are down together, and it only measures how long the combo
+         * engine holds that first keypress captured waiting for a second
+         * key — pressing two separate physical keys with two fingers/hands
+         * routinely takes longer than a short window like 200ms, which is
+         * why that value never let the second key arrive in time. */
         combo_lock_nav_l {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <52 36>;
             layers = <MAIN>;
             bindings = <&to NAV>;
         };
         combo_lock_nav_r {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <52 49>;
             layers = <MAIN>;
             bindings = <&to NAV>;
         };
         combo_lock_num_l {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <55 36>;
             layers = <MAIN>;
             bindings = <&to NUM>;
         };
         combo_lock_num_r {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <55 49>;
             layers = <MAIN>;
             bindings = <&to NUM>;
         };
         combo_lock_mou_l {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <37 36>;
             layers = <MAIN>;
             bindings = <&to MOU>;
         };
         combo_lock_mou_r {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <37 49>;
             layers = <MAIN>;
             bindings = <&to MOU>;
         };
         combo_lock_fun_l {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <48 36>;
             layers = <MAIN>;
             bindings = <&to FUN>;
         };
         combo_lock_fun_r {
-            timeout-ms = <200>;
+            timeout-ms = <500>;
             key-positions = <48 49>;
             layers = <MAIN>;
             bindings = <&to FUN>;
@@ -209,9 +218,11 @@
 
         /* Both Globe keys together = back to Base, from any locked layer.
          * No `layers` restriction so it works no matter which layer is
-         * currently locked in. */
+         * currently locked in. Shorter timeout is fine here since both
+         * keys are pressed together with two hands at once, not staggered
+         * like the lock combos above. */
         combo_unlock_to_base {
-            timeout-ms = <50>;
+            timeout-ms = <150>;
             key-positions = <36 49>;
             bindings = <&to MAIN>;
         };
