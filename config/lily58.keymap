@@ -150,6 +150,71 @@
             layers = <MAIN>;
             bindings = <&caps_word>;
         };
+
+        /* Layer locks: hold a layer-tap key (Nav/Numbers/Mouse/Functions),
+         * then tap either Globe key while still holding it — locks that
+         * layer on persistently (&to). Gated on MAIN (not the target
+         * layer), since the target layer only becomes active AFTER the
+         * layer-tap key's hold resolves — ZMK evaluates a combo's `layers`
+         * restriction at the moment the FIRST key is pressed, so gating on
+         * the not-yet-active target layer would never match. */
+        combo_lock_nav_l {
+            timeout-ms = <200>;
+            key-positions = <52 36>;
+            layers = <MAIN>;
+            bindings = <&to NAV>;
+        };
+        combo_lock_nav_r {
+            timeout-ms = <200>;
+            key-positions = <52 49>;
+            layers = <MAIN>;
+            bindings = <&to NAV>;
+        };
+        combo_lock_num_l {
+            timeout-ms = <200>;
+            key-positions = <55 36>;
+            layers = <MAIN>;
+            bindings = <&to NUM>;
+        };
+        combo_lock_num_r {
+            timeout-ms = <200>;
+            key-positions = <55 49>;
+            layers = <MAIN>;
+            bindings = <&to NUM>;
+        };
+        combo_lock_mou_l {
+            timeout-ms = <200>;
+            key-positions = <37 36>;
+            layers = <MAIN>;
+            bindings = <&to MOU>;
+        };
+        combo_lock_mou_r {
+            timeout-ms = <200>;
+            key-positions = <37 49>;
+            layers = <MAIN>;
+            bindings = <&to MOU>;
+        };
+        combo_lock_fun_l {
+            timeout-ms = <200>;
+            key-positions = <48 36>;
+            layers = <MAIN>;
+            bindings = <&to FUN>;
+        };
+        combo_lock_fun_r {
+            timeout-ms = <200>;
+            key-positions = <48 49>;
+            layers = <MAIN>;
+            bindings = <&to FUN>;
+        };
+
+        /* Both Globe keys together = back to Base, from any locked layer.
+         * No `layers` restriction so it works no matter which layer is
+         * currently locked in. */
+        combo_unlock_to_base {
+            timeout-ms = <50>;
+            key-positions = <36 49>;
+            bindings = <&to MAIN>;
+        };
     };
 
     keymap {
@@ -283,12 +348,10 @@
 // LAYER 8 — LAYER8 (system: bootloader/reset left, Bluetooth right)
 // ============================================================
 // tap outermost thumb key for momentary, double-tap for lock
-// Row 1: layer-lock keys — tap to jump to that layer and STAY there
-// (no holding needed); tap "BAS" to return to the base layer.
         l8_layer {
             display-name = "8-SYS";
             bindings = <
-&to NAV   &to NUM   &to SYM   &to MED   &to MOU   &to FUN                                                        &to MAIN &none     &none     &none     &none     &none
+&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
 &bootloader &none   &none     &none     &none     &ext_power EP_TOG                                             &none     &none     &none     &none     &none     &bootloader
 &sys_reset &none    &none     &none     &none     &out OUT_TOG                                                  &none     &none     &none     &none     &none     &sys_reset
 &none     &none     &none     &none     &none     &kp C_PWR &none                                    &none      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR &kp C_PWR
