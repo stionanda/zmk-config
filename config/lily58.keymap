@@ -14,6 +14,23 @@
  *
  * Layers: 0 Main  1 Nav  2 Numbers  3 Symbols  4 Media
  *         5 Mouse  6 Functions  7 Layer7  8 Layer8
+ *
+ * Locking Nav/Numbers/Mouse/Functions: hold the layer-tap key (Backspace/
+ * Space/Z/Slash), then while still holding it, press the outer row-4 key
+ * on either side (position 36 or 49 — plain &kp BSLH/EQUAL on Base) —
+ * that position's binding on the now-active target layer is &to <LAYER>,
+ * so it locks the layer on directly. This is NOT a combo: an earlier
+ * combo-based design (key-positions = <layer-tap-pos other-pos>) never
+ * worked, because ZMK's combo engine can't see a keydown that happens
+ * while another position's hold-tap (the &lt layer-tap key itself) is
+ * still undecided — the undecided hold-tap's event-capture runs before
+ * combo.c's listener in ZMK's fixed link order, on every other key,
+ * regardless of what that other key is bound to. Binding the lock
+ * directly on the target layer sidesteps the whole problem, since no
+ * hold-tap/combo race is involved. Both outer row-4 keys together
+ * (combo_unlock_to_base) return to Base from any locked layer — this one
+ * IS a real combo, and it works because both its member keys are plain
+ * &kp on every layer (no hold-tap involved on either side).
  */
 
 #include <behaviors.dtsi>
@@ -120,9 +137,6 @@
          * bindings = <&mo>, <&kp>; with flavor "tap-preferred", the
          * standard ZMK pattern for tap-a-key/hold-a-layer keys. */
 
-        /* Mod-morph: \ key sends Globe-layer-tap while nothing special;
-         * left/right outer row-4 keys hold Globe via plain &mt below */
-
         /* Tap-dance: single tap = momentary layer, double tap = lock it on */
         td_l7: td_l7 {
             compatible = "zmk,behavior-tap-dance";
@@ -151,76 +165,11 @@
             bindings = <&caps_word>;
         };
 
-        /* Layer locks: hold a layer-tap key (Nav/Numbers/Mouse/Functions),
-         * then hold either Globe key down too, while still holding the
-         * first — locks that layer on persistently (&to). Gated on MAIN
-         * (not the target layer), since the target layer only becomes
-         * active AFTER the layer-tap key's hold resolves — ZMK evaluates a
-         * combo's `layers` restriction once, at the moment the FIRST key
-         * is pressed, so gating on the not-yet-active target layer would
-         * never match.
-         *
-         * timeout-ms is deliberately generous (500ms): ZMK's combo timer
-         * starts counting from the FIRST key's press, not from when both
-         * keys are down together, and it only measures how long the combo
-         * engine holds that first keypress captured waiting for a second
-         * key — pressing two separate physical keys with two fingers/hands
-         * routinely takes longer than a short window like 200ms, which is
-         * why that value never let the second key arrive in time. */
-        combo_lock_nav_l {
-            timeout-ms = <500>;
-            key-positions = <52 36>;
-            layers = <MAIN>;
-            bindings = <&to NAV>;
-        };
-        combo_lock_nav_r {
-            timeout-ms = <500>;
-            key-positions = <52 49>;
-            layers = <MAIN>;
-            bindings = <&to NAV>;
-        };
-        combo_lock_num_l {
-            timeout-ms = <500>;
-            key-positions = <55 36>;
-            layers = <MAIN>;
-            bindings = <&to NUM>;
-        };
-        combo_lock_num_r {
-            timeout-ms = <500>;
-            key-positions = <55 49>;
-            layers = <MAIN>;
-            bindings = <&to NUM>;
-        };
-        combo_lock_mou_l {
-            timeout-ms = <500>;
-            key-positions = <37 36>;
-            layers = <MAIN>;
-            bindings = <&to MOU>;
-        };
-        combo_lock_mou_r {
-            timeout-ms = <500>;
-            key-positions = <37 49>;
-            layers = <MAIN>;
-            bindings = <&to MOU>;
-        };
-        combo_lock_fun_l {
-            timeout-ms = <500>;
-            key-positions = <48 36>;
-            layers = <MAIN>;
-            bindings = <&to FUN>;
-        };
-        combo_lock_fun_r {
-            timeout-ms = <500>;
-            key-positions = <48 49>;
-            layers = <MAIN>;
-            bindings = <&to FUN>;
-        };
-
-        /* Both Globe keys together = back to Base, from any locked layer.
-         * No `layers` restriction so it works no matter which layer is
-         * currently locked in. Shorter timeout is fine here since both
-         * keys are pressed together with two hands at once, not staggered
-         * like the lock combos above. */
+        /* Both outer row-4 keys together = back to Base, from any locked
+         * layer. Both keys are plain &kp (not hold-tap) on every layer, so
+         * this combo isn't racing an undecided hold-tap for event capture
+         * — a genuinely simultaneous two-hand press reaches combo.c
+         * cleanly. No `layers` restriction so it works from any layer. */
         combo_unlock_to_base {
             timeout-ms = <150>;
             key-positions = <36 49>;
@@ -245,7 +194,7 @@
 &kp LBKT             &kp N1 &kp N2 &kp N3 &kp N4 &kp N5                                                          &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp RBKT
 &kp TAB              &kp Q     &kp W     &kp E     &kp R     &kp T                                              &kp Y     &kp U     &kp I     &kp O     &kp P     &kp MINUS
 &kp GRAVE            &hml LCTRL A &hml LALT S &hml LGUI D &hsl LSHFT F &kp G                                    &kp H     &hsr RSHFT J &hmr RGUI K &hmr RALT L &hmr RCTRL SEMI &kp SQT
-&mt GLOBE BSLH       &lt MOU Z &kp X    &kp C     &as LSHFT V &kp B     &kp LEFT_HYPER                        &kp RIGHT_HYPER &kp N &kp M &kp COMMA &kp DOT &lt FUN FSLH &mt GLOBE EQUAL
+&kp BSLH             &lt MOU Z &kp X    &kp C     &as LSHFT V &kp B     &kp LEFT_HYPER                        &kp RIGHT_HYPER &kp N &kp M &kp COMMA &kp DOT &lt FUN FSLH &kp EQUAL
                                 &td_l8    &td_l7    &lt NAV BSPC &lt SYM ESC        &lt MED RET &lt NUM SPACE &td_l7 &td_l8
             >;
         };
@@ -260,7 +209,7 @@
 &mt LGUI GRAVE &kp LG(N1) &kp LG(N2) &kp LG(N3) &kp LG(N4) &kp LG(N5)                                            &none     &kp HOME &kp LG(LS(N3)) &kp LG(LS(N4)) &kp END &none
 &mt LGUI TAB   &kp LG(Q) &kp LG(W) &kp LG(E) &kp LG(R) &kp LG(T)                                                 &none     &kp MAC_FINDPREV &kp UP    &kp MAC_FINDNEXT &kp TAB &none
 &mt LGUI GRAVE &mt LGUI LG(A) &mt LALT LG(S) &mt LGUI LG(D) &mt LSHFT LG(F) &kp LG(G)                            &none     &kp LEFT  &kp DOWN  &kp RIGHT &kp MAC_APPWIN &none
-&mt LGUI GRAVE &kp LG(Z) &kp LG(X) &kp LG(C) &kp LG(V) &kp LG(B) &none                                &none      &none     &kp MAC_WORDPREV &kp MAC_LINESTART &kp MAC_LINEEND &kp MAC_WORDNEXT &none
+&to NAV        &kp LG(Z) &kp LG(X) &kp LG(C) &kp LG(V) &kp LG(B) &none                                &none      &none     &kp MAC_WORDPREV &kp MAC_LINESTART &kp MAC_LINEEND &kp MAC_WORDNEXT &none
                          &none     &none     &none     &tog NAV                                                  &none     &none     &none     &none
             >;
         };
@@ -275,7 +224,7 @@
 &none     &kp LBKT  &kp STAR  &kp FSLH  &kp RBKT  &kp CARET                                                     &none     &none     &none     &none     &none     &none
 &kp TAB   &kp N1    &kp N2    &kp N3    &kp N4    &kp N5                                                        &none     &none     &none     &none     &none     &none
 &kp RET   &kp N6    &kp N7    &kp N8    &kp N9    &kp N0                                                        &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&none     &kp LPAR  &kp PLUS  &kp MINUS &kp RPAR  &kp DOT   &none                                    &none      &none     &none     &none     &none     &none     &kp EQUAL
+&to NUM   &kp LPAR  &kp PLUS  &kp MINUS &kp RPAR  &kp DOT   &none                                    &none      &none     &none     &none     &none     &none     &kp EQUAL
                     &tog NUM  &none     &kp COMMA &kp BSPC                                                       &kp RET   &none     &none     &none
             >;
         };
@@ -320,7 +269,7 @@
 &none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
 &none     &mkp MB4  &mkp MB3  &mkp MB2  &mkp MB1  &mkp MB5                                                      &none     &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_UNDO &none
 &none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &none                                                         &none     &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none
-&none     &none     &none     &none     &none     &none     &none                                    &none      &none     &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none
+&to MOU   &none     &none     &none     &none     &none     &none                                    &none      &none     &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none
                     &none     &none     &none     &none                                                          &mkp MB1  &mkp MB2  &tog MOU  &none
             >;
         };
@@ -335,7 +284,7 @@
 &none     &kp F16   &kp F17   &kp F18   &kp F19   &kp F20                                                       &none     &none     &none     &none     &none     &none
 &none     &kp F11   &kp F12   &kp F13   &kp F14   &kp F15                                                       &none     &none     &none     &none     &none     &none
 &none     &kp F6    &kp F7    &kp F8    &kp F9    &kp F10                                                       &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&none     &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &none                                     &none      &none     &none     &none     &none     &none     &none
+&to FUN   &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &none                                     &none      &none     &none     &none     &none     &none     &none
                     &none     &none     &none     &none                                                          &none     &none     &none     &tog FUN
             >;
         };
