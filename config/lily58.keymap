@@ -209,7 +209,7 @@
 &mt LGUI GRAVE &kp LG(N1) &kp LG(N2) &kp LG(N3) &kp LG(N4) &kp LG(N5)                                            &none     &kp HOME &kp LG(LS(N3)) &kp LG(LS(N4)) &kp END &none
 &mt LGUI TAB   &kp LG(Q) &kp LG(W) &kp LG(E) &kp LG(R) &kp LG(T)                                                 &none     &kp MAC_FINDPREV &kp UP    &kp MAC_FINDNEXT &kp TAB &none
 &mt LGUI GRAVE &mt LGUI LG(A) &mt LALT LG(S) &mt LGUI LG(D) &mt LSHFT LG(F) &kp LG(G)                            &none     &kp LEFT  &kp DOWN  &kp RIGHT &kp MAC_APPWIN &none
-&to NAV        &kp LG(Z) &kp LG(X) &kp LG(C) &kp LG(V) &kp LG(B) &none                                &none      &none     &kp MAC_WORDPREV &kp MAC_LINESTART &kp MAC_LINEEND &kp MAC_WORDNEXT &none
+&to NAV        &kp LG(Z) &kp LG(X) &kp LG(C) &kp LG(V) &kp LG(B) &none                                &none      &none     &kp MAC_WORDPREV &kp MAC_LINESTART &kp MAC_LINEEND &kp MAC_WORDNEXT &to NAV
                          &none     &none     &none     &tog NAV                                                  &none     &none     &none     &none
             >;
         };
@@ -269,7 +269,7 @@
 &none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
 &none     &mkp MB4  &mkp MB3  &mkp MB2  &mkp MB1  &mkp MB5                                                      &none     &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_UNDO &none
 &none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &none                                                         &none     &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none
-&to MOU   &none     &none     &none     &none     &none     &none                                    &none      &none     &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none
+&to MOU   &none     &none     &none     &none     &none     &none                                    &none      &none     &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &to MOU
                     &none     &none     &none     &none                                                          &mkp MB1  &mkp MB2  &tog MOU  &none
             >;
         };
@@ -284,7 +284,7 @@
 &none     &kp F16   &kp F17   &kp F18   &kp F19   &kp F20                                                       &none     &none     &none     &none     &none     &none
 &none     &kp F11   &kp F12   &kp F13   &kp F14   &kp F15                                                       &none     &none     &none     &none     &none     &none
 &none     &kp F6    &kp F7    &kp F8    &kp F9    &kp F10                                                       &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&to FUN   &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &none                                     &none      &none     &none     &none     &none     &none     &none
+&to FUN   &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &none                                     &none      &none     &none     &none     &none     &none     &to FUN
                     &none     &none     &none     &none                                                          &none     &none     &none     &tog FUN
             >;
         };
