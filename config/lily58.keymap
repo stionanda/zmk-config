@@ -33,12 +33,13 @@
  * &kp on every layer (no hold-tap involved on either side).
  */
 
-#include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/mouse.h>
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/pointing.h>
 
 #define MAIN 0
 #define NAV  1
@@ -51,6 +52,7 @@
 #define L8   8
 
 /* ---- macOS shortcut aliases ---- */
+
 #define MAC_CUT        LG(X)
 #define MAC_COPY       LG(C)
 #define MAC_PASTE      LG(V)
@@ -70,12 +72,14 @@
 #define MAC_PREVDESK   LG(LC(LEFT))
 
 /* ---- Hyper / Meh (row 4, 7th key each side) ---- */
+
 #define LEFT_HYPER  LS(LA(LC(LGUI)))
 #define RIGHT_HYPER RS(RA(RC(RGUI)))
 
 / {
     behaviors {
         /* Home row mods */
+
         hml: homerow_mods_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -99,6 +103,7 @@
         };
 
         /* Shift-specific home row mods: no require-prior-idle-ms */
+
         hsl: homerow_shift_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -120,6 +125,7 @@
         };
 
         /* Autoshift: tap = key, hold = Shift+key */
+
         as: auto_shift {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -136,8 +142,8 @@
          * and Enter/Media, which already work correctly) and uses
          * bindings = <&mo>, <&kp>; with flavor "tap-preferred", the
          * standard ZMK pattern for tap-a-key/hold-a-layer keys. */
-
         /* Tap-dance: single tap = momentary layer, double tap = lock it on */
+
         td_l7: td_l7 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -151,13 +157,13 @@
             tapping-term-ms = <200>;
             bindings = <&mo L8>, <&tog L8>;
         };
-
     };
 
     combos {
         compatible = "zmk,combos";
 
         /* Hold both index-finger home row mod keys (F and J) = Caps Word */
+
         combo_caps_word {
             timeout-ms = <75>;
             key-positions = <28 31>;
@@ -170,6 +176,7 @@
          * this combo isn't racing an undecided hold-tap for event capture
          * — a genuinely simultaneous two-hand press reaches combo.c
          * cleanly. No `layers` restriction so it works from any layer. */
+
         combo_unlock_to_base {
             timeout-ms = <150>;
             key-positions = <36 49>;
@@ -180,154 +187,161 @@
     keymap {
         compatible = "zmk,keymap";
 
-// ============================================================
-// LAYER 0 — MAIN (QWERTY)
-// ============================================================
-// | {[⌘`| 1! | 2@ | 3# | 4$ | 5% |                | 6^ | 7& | 8* | 9( | 0) | }] |
-// | Tab  | Q  | W  | E  | R  | T  |                | Y  | U  | I  | O  | P  | _- |
-// | ~    |A/^ |S/⌥ |D/⌘ |F/⇧ | G  |                | H  |J/⇧ |K/⌘ |L/⌥ | ;/^| "' |
-// |\/Glob| Z/5| X  | C  |V/⇧V| B  | HYPER || HYPER | N  | M  | ,< | .> |//? |=/Gl|
-//              L8   L7  Bspc/1  Esc/3           Ret/4  Spc/2   L7   L8
+        // ============================================================
+        // LAYER 0 — MAIN (QWERTY)
+        // ============================================================
+        // | {[⌘`| 1! | 2@ | 3# | 4$ | 5% |                | 6^ | 7& | 8* | 9( | 0) | }] |
+        // | Tab  | Q  | W  | E  | R  | T  |                | Y  | U  | I  | O  | P  | _- |
+        // | ~    |A/^ |S/⌥ |D/⌘ |F/⇧ | G  |                | H  |J/⇧ |K/⌘ |L/⌥ | ;/^| "' |
+        // |\/Glob| Z/5| X  | C  |V/⇧V| B  | HYPER || HYPER | N  | M  | ,< | .> |//? |=/Gl|
+        //              L8   L7  Bspc/1  Esc/3           Ret/4  Spc/2   L7   L8
+
         main_layer {
             display-name = "0-BAS";
             bindings = <
-&kp LBKT             &kp N1 &kp N2 &kp N3 &kp N4 &kp N5                                                          &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp RBKT
-&kp TAB              &kp Q     &kp W     &kp E     &kp R     &kp T                                              &kp Y     &kp U     &kp I     &kp O     &kp P     &kp MINUS
-&kp GRAVE            &hml LCTRL A &hml LALT S &hml LGUI D &hsl LSHFT F &kp G                                    &kp H     &hsr RSHFT J &hmr RGUI K &hmr RALT L &hmr RCTRL SEMI &kp SQT
-&kp BSLH             &lt MOU Z &kp X    &kp C     &as LSHFT V &kp B     &kp LEFT_HYPER                        &kp RIGHT_HYPER &kp N &kp M &kp COMMA &kp DOT &lt FUN FSLH &kp EQUAL
-                                &td_l8    &td_l7    &lt NAV BSPC &lt SYM ESC        &lt MED RET &lt NUM SPACE &td_l7 &td_l8
+&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                                           &kp N6         &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
+&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                                            &kp Y          &kp U         &kp I        &kp O        &kp P            &kp MINUS
+&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                                            &kp H          &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
+&kp BSLH   &lt MOU Z     &kp X        &kp C        &kp V         &kp B         &kp LEFT_HYPER    &kp RIGHT_HYPER  &kp N          &kp M         &kp COMMA    &kp DOT      &lt FUN FSLH     &kp EQUAL
+                                      &td_l8       &td_l7        &lt NAV BSPC  &lt SYM ESC       &lt MED RET      &lt NUM SPACE  &td_l7        &td_l8
             >;
         };
 
-// ============================================================
-// LAYER 1 — NAV
-// ============================================================
-// hold Backspace key (left thumb) for this layer
+        // ============================================================
+        // LAYER 1 — NAV
+        // ============================================================
+        // hold Backspace key (left thumb) for this layer
+
         nav_layer {
             display-name = "1-NAV";
             bindings = <
-&mt LGUI GRAVE &kp LG(N1) &kp LG(N2) &kp LG(N3) &kp LG(N4) &kp LG(N5)                                            &none     &kp HOME &kp LG(LS(N3)) &kp LG(LS(N4)) &kp END &none
-&mt LGUI TAB   &kp LG(Q) &kp LG(W) &kp LG(E) &kp LG(R) &kp LG(T)                                                 &none     &kp MAC_FINDPREV &kp UP    &kp MAC_FINDNEXT &kp TAB &none
-&mt LGUI GRAVE &mt LGUI LG(A) &mt LALT LG(S) &mt LGUI LG(D) &mt LSHFT LG(F) &kp LG(G)                            &none     &kp LEFT  &kp DOWN  &kp RIGHT &kp MAC_APPWIN &none
-&to NAV        &kp LG(Z) &kp LG(X) &kp LG(C) &kp LG(V) &kp LG(B) &none                                &none      &none     &kp MAC_WORDPREV &kp MAC_LINESTART &kp MAC_LINEEND &kp MAC_WORDNEXT &to NAV
-                         &none     &none     &none     &tog NAV                                                  &none     &none     &none     &none
+&mt LGUI GRAVE  &kp LG(N1)      &kp LG(N2)      &kp LG(N3)      &kp LG(N4)       &kp LG(N5)                     &none  &kp HOME          &kp LG(LS(N3))     &kp LG(LS(N4))    &kp END           &none
+&mt LGUI TAB    &kp LG(Q)       &kp LG(W)       &kp LG(E)       &kp LG(R)        &kp LG(T)                      &none  &kp MAC_FINDPREV  &kp UP             &kp MAC_FINDNEXT  &kp TAB           &none
+&mt LGUI GRAVE  &mt LGUI LG(A)  &mt LALT LG(S)  &mt LGUI LG(D)  &mt LSHFT LG(F)  &kp LG(G)                      &none  &kp LEFT          &kp DOWN           &kp RIGHT         &kp MAC_APPWIN    &none
+&to NAV         &kp LG(Z)       &kp LG(X)       &kp LG(C)       &kp LG(V)        &kp LG(B)   &none       &none  &none  &kp MAC_WORDPREV  &kp MAC_LINESTART  &kp MAC_LINEEND   &kp MAC_WORDNEXT  &to NAV
+                                                &none           &none            &none       &tog NAV    &none  &none  &none             &none
             >;
         };
 
-// ============================================================
-// LAYER 2 — NUMBERS
-// ============================================================
-// hold Space key (right thumb) for this layer
+        // ============================================================
+        // LAYER 2 — NUMBERS
+        // ============================================================
+        // hold Space key (right thumb) for this layer
+
         num_layer {
             display-name = "2-NUM";
             bindings = <
-&none     &kp LBKT  &kp STAR  &kp FSLH  &kp RBKT  &kp CARET                                                     &none     &none     &none     &none     &none     &none
-&kp TAB   &kp N1    &kp N2    &kp N3    &kp N4    &kp N5                                                        &none     &none     &none     &none     &none     &none
-&kp RET   &kp N6    &kp N7    &kp N8    &kp N9    &kp N0                                                        &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&to NUM   &kp LPAR  &kp PLUS  &kp MINUS &kp RPAR  &kp DOT   &none                                    &none      &none     &none     &none     &none     &none     &kp EQUAL
-                    &tog NUM  &none     &kp COMMA &kp BSPC                                                       &kp RET   &none     &none     &none
+&none    &kp LBKT  &kp STAR  &kp FSLH   &kp RBKT  &kp CARET                       &none  &none      &none     &none     &none      &none
+&kp TAB  &kp N1    &kp N2    &kp N3     &kp N4    &kp N5                          &none  &none      &none     &none     &none      &none
+&kp RET  &kp N6    &kp N7    &kp N8     &kp N9    &kp N0                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&to NUM  &kp LPAR  &kp PLUS  &kp MINUS  &kp RPAR  &kp DOT    &none       &none    &none  &none      &none     &none     &none      &kp EQUAL
+                             &tog NUM   &none     &kp COMMA  &kp BSPC    &kp RET  &none  &none      &none
             >;
         };
 
-// ============================================================
-// LAYER 3 — SYMBOLS
-// ============================================================
-// hold Esc key (left thumb) for this layer
+        // ============================================================
+        // LAYER 3 — SYMBOLS
+        // ============================================================
+        // hold Esc key (left thumb) for this layer
+
         sym_layer {
             display-name = "3-SYM";
             bindings = <
-&none     &none     &none     &none     &none     &none                                                        &kp QMARK &kp PLUS  &kp MINUS &kp DOT   &kp FSLH  &kp BSLH
-&none     &none     &none     &none     &none     &none                                                        &kp AMPS  &kp LT    &kp EQUAL &kp GT    &kp PIPE  &kp HASH
-&none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &none                                                         &kp LBKT  &kp LPAR  &kp COLON &kp RPAR  &kp RBKT  &kp PRCNT
-&none     &none     &none     &none     &none     &none     &none                                    &none      &kp DLLR  &kp LBRC  &kp STAR  &kp RBRC  &kp CARET &kp EXCL
-                    &none     &none     &none     &tog SYM                                                       &kp AT    &kp SPACE &none     &none
+&none  &none      &none     &none     &none      &none                      &kp QMARK  &kp PLUS  &kp MINUS  &kp DOT   &kp FSLH   &kp BSLH
+&none  &none      &none     &none     &none      &none                      &kp AMPS   &kp LT    &kp EQUAL  &kp GT    &kp PIPE   &kp HASH
+&none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                      &kp LBKT   &kp LPAR  &kp COLON  &kp RPAR  &kp RBKT   &kp PRCNT
+&none  &none      &none     &none     &none      &none  &none       &none   &kp DLLR   &kp LBRC  &kp STAR   &kp RBRC  &kp CARET  &kp EXCL
+                            &none     &none      &none  &tog SYM    &kp AT  &kp SPACE  &none     &none
             >;
         };
 
-// ============================================================
-// LAYER 4 — MEDIA
-// ============================================================
-// hold Enter key (right thumb) for this layer
+        // ============================================================
+        // LAYER 4 — MEDIA
+        // ============================================================
+        // hold Enter key (right thumb) for this layer
+
         med_layer {
             display-name = "4-MED";
             bindings = <
-&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
-&kp C_VOL_UP &kp C_BRI_UP &none &none &none &none                                                                &none     &none     &none     &none     &none     &none
-&kp C_VOL_DN &kp C_BRI_DN &kp C_PREV &kp C_PP &kp C_NEXT &none                                                    &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&kp C_MUTE &none     &none     &none     &none     &none     &none                                    &none      &none     &none     &none     &none     &none     &none
-                    &none     &none     &none     &kp C_STOP                                                     &tog MED  &none     &none     &none
+&none         &none         &none       &none     &none       &none                          &none  &none      &none     &none     &none      &none
+&kp C_VOL_UP  &kp C_BRI_UP  &none       &none     &none       &none                          &none  &none      &none     &none     &none      &none
+&kp C_VOL_DN  &kp C_BRI_DN  &kp C_PREV  &kp C_PP  &kp C_NEXT  &none                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&kp C_MUTE    &none         &none       &none     &none       &none  &none         &none     &none  &none      &none     &none     &none      &none
+                                        &none     &none       &none  &kp C_STOP    &tog MED  &none  &none      &none
             >;
         };
 
-// ============================================================
-// LAYER 5 — MOUSE
-// ============================================================
-// hold Z key (left, next to A) for this layer
+        // ============================================================
+        // LAYER 5 — MOUSE
+        // ============================================================
+        // hold Z key (left, next to A) for this layer
+
         mou_layer {
             display-name = "5-MOU";
             bindings = <
-&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
-&none     &mkp MB4  &mkp MB3  &mkp MB2  &mkp MB1  &mkp MB5                                                      &none     &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_UNDO &none
-&none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &none                                                         &none     &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none
-&to MOU   &none     &none     &none     &none     &none     &none                                    &none      &none     &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &to MOU
-                    &none     &none     &none     &none                                                          &mkp MB1  &mkp MB2  &tog MOU  &none
+&none    &none      &none     &none     &none      &none                        &none     &none           &none           &none          &none            &none
+&none    &mkp MB4   &mkp MB3  &mkp MB2  &mkp MB1   &mkp MB5                     &none     &kp MAC_CUT     &kp MAC_COPY    &kp MAC_PASTE  &kp MAC_UNDO     &none
+&none    &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                        &none     &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP   &mmv MOVE_RIGHT  &none
+&to MOU  &none      &none     &none     &none      &none     &none    &none     &none     &msc SCRL_LEFT  &msc SCRL_DOWN  &msc SCRL_UP   &msc SCRL_RIGHT  &to MOU
+                              &none     &none      &none     &none    &mkp MB1  &mkp MB2  &tog MOU        &none
             >;
         };
 
-// ============================================================
-// LAYER 6 — FUNCTIONS
-// ============================================================
-// hold / key (right, next to .) for this layer
+        // ============================================================
+        // LAYER 6 — FUNCTIONS
+        // ============================================================
+        // hold / key (right, next to .) for this layer
+
         fun_layer {
             display-name = "6-FUN";
             bindings = <
-&none     &kp F16   &kp F17   &kp F18   &kp F19   &kp F20                                                       &none     &none     &none     &none     &none     &none
-&none     &kp F11   &kp F12   &kp F13   &kp F14   &kp F15                                                       &none     &none     &none     &none     &none     &none
-&none     &kp F6    &kp F7    &kp F8    &kp F9    &kp F10                                                       &none     &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&to FUN   &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &none                                     &none      &none     &none     &none     &none     &none     &to FUN
-                    &none     &none     &none     &none                                                          &none     &none     &none     &tog FUN
+&none    &kp F16  &kp F17  &kp F18  &kp F19  &kp F20                  &none  &none      &none     &none     &none      &none
+&none    &kp F11  &kp F12  &kp F13  &kp F14  &kp F15                  &none  &none      &none     &none     &none      &none
+&none    &kp F6   &kp F7   &kp F8   &kp F9   &kp F10                  &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&to FUN  &kp F1   &kp F2   &kp F3   &kp F4   &kp F5   &none    &none  &none  &none      &none     &none     &none      &to FUN
+                           &none    &none    &none    &none    &none  &none  &none      &tog FUN
             >;
         };
 
-// ============================================================
-// LAYER 7 — LAYER7 (mirrored both sides — macOS window/app shortcuts)
-// ============================================================
-// tap outer-second thumb key for momentary, double-tap for lock
+        // ============================================================
+        // LAYER 7 — LAYER7 (mirrored both sides — macOS window/app shortcuts)
+        // ============================================================
+        // tap outer-second thumb key for momentary, double-tap for lock
+
         l7_layer {
             display-name = "7-SHO";
             bindings = <
-&none     &kp LS(TAB) &kp MAC_FINDPREV &kp MAC_FINDNEXT &kp TAB &kp MAC_LAUNCHPAD                              &kp MAC_LAUNCHPAD &kp LS(TAB) &kp MAC_FINDPREV &kp MAC_FINDNEXT &kp TAB &none
-&none     &kp MAC_PREVDESK &kp MAC_WORDPREV &kp MAC_WORDNEXT &kp MAC_NEXTDESK &kp MAC_APPWIN                    &kp MAC_APPWIN &kp MAC_PREVDESK &kp MAC_WORDPREV &kp MAC_WORDNEXT &kp MAC_NEXTDESK &none
-&none     &kp LCTRL &kp LALT  &kp LGUI  &kp LSHFT &kp MAC_MSNCTRL                                                &kp MAC_MSNCTRL &kp RSHFT &kp RGUI  &kp RALT  &kp RCTRL &none
-&none     &kp MAC_UNDO &kp MAC_CUT &kp MAC_COPY &kp MAC_PASTE &kp MAC_SPOTLIGHT &none                 &none      &kp MAC_SPOTLIGHT &kp MAC_PASTE &kp MAC_COPY &kp MAC_CUT &kp MAC_UNDO &none
-                    &tog L7   &none     &none     &none                                                          &none     &none     &none     &tog L7
+&none  &kp LS(TAB)       &kp MAC_FINDPREV  &kp MAC_FINDNEXT  &kp TAB           &kp MAC_LAUNCHPAD                  &kp MAC_LAUNCHPAD  &kp LS(TAB)       &kp MAC_FINDPREV  &kp MAC_FINDNEXT  &kp TAB           &none
+&none  &kp MAC_PREVDESK  &kp MAC_WORDPREV  &kp MAC_WORDNEXT  &kp MAC_NEXTDESK  &kp MAC_APPWIN                     &kp MAC_APPWIN     &kp MAC_PREVDESK  &kp MAC_WORDPREV  &kp MAC_WORDNEXT  &kp MAC_NEXTDESK  &none
+&none  &kp LCTRL         &kp LALT          &kp LGUI          &kp LSHFT         &kp MAC_MSNCTRL                    &kp MAC_MSNCTRL    &kp RSHFT         &kp RGUI          &kp RALT          &kp RCTRL         &none
+&none  &kp MAC_UNDO      &kp MAC_CUT       &kp MAC_COPY      &kp MAC_PASTE     &kp MAC_SPOTLIGHT  &none    &none  &kp MAC_SPOTLIGHT  &kp MAC_PASTE     &kp MAC_COPY      &kp MAC_CUT       &kp MAC_UNDO      &none
+                                           &tog L7           &none             &none              &none    &none  &none              &none             &tog L7
             >;
         };
 
-// ============================================================
-// LAYER 8 — LAYER8 (system: bootloader/reset left, Bluetooth right)
-// ============================================================
-// tap outermost thumb key for momentary, double-tap for lock
+        // ============================================================
+        // LAYER 8 — LAYER8 (system: bootloader/reset left, Bluetooth right)
+        // ============================================================
+        // tap outermost thumb key for momentary, double-tap for lock
+
         l8_layer {
             display-name = "8-SYS";
             bindings = <
-&none     &none     &none     &none     &none     &none                                                        &none     &none     &none     &none     &none     &none
-&bootloader &none   &none     &none     &none     &ext_power EP_TOG                                             &none     &none     &none     &none     &none     &bootloader
-&sys_reset &none    &none     &none     &none     &out OUT_TOG                                                  &none     &none     &none     &none     &none     &sys_reset
-&none     &none     &none     &none     &none     &kp C_PWR &none                                    &none      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR &kp C_PWR
-                    &tog L8   &none     &none     &none                                                          &none     &none     &none     &tog L8
+&none        &none  &none  &none    &none  &none                              &none         &none         &none         &none         &none       &none
+&bootloader  &none  &none  &none    &none  &ext_power EP_TOG                  &none         &none         &none         &none         &none       &bootloader
+&sys_reset   &none  &none  &none    &none  &out OUT_TOG                       &none         &none         &none         &none         &none       &sys_reset
+&none        &none  &none  &none    &none  &kp C_PWR          &none    &none  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR  &kp C_PWR
+                           &tog L8  &none  &none              &none    &none  &none         &none         &tog L8
             >;
         };
     };
 };
 
 /* Caps-word: don't break the streak on _, -, Backspace */
-&caps_word {
-    continue-list = <UNDERSCORE MINUS BACKSPACE>;
-};
+
+&caps_word { continue-list = <UNDERSCORE MINUS BACKSPACE>; };
 
 /* Raise &lt's default hold timing to match the other layer-tap keys
  * (Esc/Symbols, Enter/Media) so normal typing doesn't misfire the layer. */
-&lt {
-    tapping-term-ms = <280>;
-};
+
+&lt { tapping-term-ms = <280>; };
