@@ -35,10 +35,8 @@
 
 #include <dt-bindings/zmk/mouse.h>
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
 
 #define MAIN 0
@@ -148,14 +146,14 @@
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&mo L7>, <&tog L7>;
+            bindings = <&mo 0>, <&tog 0>;
         };
 
         td_l8: td_l8 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&mo L8>, <&tog L8>;
+            bindings = <&mo 0>, <&tog 0>;
         };
     };
 
@@ -167,7 +165,7 @@
         combo_caps_word {
             timeout-ms = <75>;
             key-positions = <28 31>;
-            layers = <MAIN>;
+            layers = <0>;
             bindings = <&caps_word>;
         };
 
@@ -180,16 +178,23 @@
         combo_unlock_to_base {
             timeout-ms = <150>;
             key-positions = <36 49>;
-            bindings = <&to MAIN>;
+            bindings = <&to 0>;
         };
     };
 
     macros {
-        hyper_key: hyper_key {
+        hyper_left_key: hyper_key {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&none>;
+            bindings = <&kp LA(LC(LG(LS(LEFT_ARROW))))>;
             label = "HYPER_KEY";
+        };
+
+        hyper_right_key: hyper_right_key {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp RS(RA(RC(RG(RIGHT_ARROW))))>;
+            label = "HYPER_RIGHT_KEY";
         };
     };
 
@@ -208,11 +213,11 @@
         main_layer {
             display-name = "0-BAS";
             bindings = <
-&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                                           &kp N6         &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
-&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                                            &kp Y          &kp U         &kp I        &kp O        &kp P            &kp MINUS
-&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                                            &kp H          &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
-&kp BSLH   &lt MOU Z     &kp X        &kp C        &kp V         &kp B         &kp LEFT_HYPER    &kp RIGHT_HYPER  &kp N          &kp M         &kp COMMA    &kp DOT      &lt FUN FSLH     &kp EQUAL
-                                      &td_l8       &td_l7        &lt NAV BSPC  &lt SYM ESC       &lt MED RET      &lt NUM SPACE  &td_l7        &td_l8
+&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                              &kp N6       &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
+&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                               &kp Y        &kp U         &kp I        &kp O        &kp P            &kp MINUS
+&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                               &kp H        &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
+&kp BSLH   &kp Z         &kp X        &kp C        &kp V         &kp B       &none        &none      &kp N        &kp M         &kp COMMA    &kp DOT      &kp FSLH         &kp EQUAL
+                                      &tog 5       &to 3         &lt 1 BSPC  &lt 3 ESC    &lt 4 RET  &lt 2 SPACE  &tog 4        &tog 6
             >;
         };
 
@@ -240,11 +245,11 @@
         num_layer {
             display-name = "2-NUM";
             bindings = <
-&none    &kp LBKT  &kp STAR  &kp FSLH   &kp RBKT  &kp CARET                       &none  &none      &none     &none     &none      &none
-&kp TAB  &kp N1    &kp N2    &kp N3     &kp N4    &kp N5                          &none  &none      &none     &none     &none      &none
-&kp RET  &kp N6    &kp N7    &kp N8     &kp N9    &kp N0                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
-&to NUM  &kp LPAR  &kp PLUS  &kp MINUS  &kp RPAR  &kp DOT    &none       &none    &none  &none      &none     &none     &none      &kp EQUAL
-                             &tog NUM   &none     &kp COMMA  &kp BSPC    &kp RET  &none  &none      &none
+&none      &kp LBKT  &kp STAR  &kp FSLH   &kp RBKT  &kp CARET                       &none  &none      &none     &none     &none      &none
+&kp TAB    &kp N1    &kp N2    &kp N3     &kp N4    &kp N5                          &none  &none      &none     &none     &none      &none
+&kp RET    &kp N6    &kp N7    &kp N8     &kp N9    &kp N0                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&kp GLOBE  &kp LPAR  &kp PLUS  &kp MINUS  &kp RPAR  &kp DOT    &none       &none    &none  &none      &none     &none     &none      &kp EQUAL
+                               &tog 2     &none     &kp COMMA  &kp BSPC    &kp RET  &none  &none      &none
             >;
         };
 
@@ -256,11 +261,11 @@
         sym_layer {
             display-name = "3-SYM";
             bindings = <
-&none  &none      &none     &none     &none      &none                      &kp QMARK  &kp PLUS  &kp MINUS  &kp DOT   &kp FSLH   &kp BSLH
-&none  &none      &none     &none     &none      &none                      &kp AMPS   &kp LT    &kp EQUAL  &kp GT    &kp PIPE   &kp HASH
-&none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                      &kp LBKT   &kp LPAR  &kp COLON  &kp RPAR  &kp RBKT   &kp PRCNT
-&none  &none      &none     &none     &none      &none  &none       &none   &kp DLLR   &kp LBRC  &kp STAR   &kp RBRC  &kp CARET  &kp EXCL
-                            &none     &none      &none  &tog SYM    &kp AT  &kp SPACE  &none     &none
+&none  &none      &none     &none     &none      &none                    &kp QMARK  &kp PLUS  &kp MINUS  &kp DOT   &kp FSLH   &kp BSLH
+&none  &none      &none     &none     &none      &none                    &kp AMPS   &kp LT    &kp EQUAL  &kp GT    &kp PIPE   &kp HASH
+&none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                    &kp LBKT   &kp LPAR  &kp COLON  &kp RPAR  &kp RBKT   &kp PRCNT
+&none  &none      &none     &none     &none      &none  &none     &none   &kp DLLR   &kp LBRC  &kp STAR   &kp RBRC  &kp CARET  &kp EXCL
+                            &none     &none      &none  &tog 3    &kp AT  &kp SPACE  &none     &none
             >;
         };
 
@@ -272,11 +277,11 @@
         med_layer {
             display-name = "4-MED";
             bindings = <
-&none         &none         &none       &none     &none       &none                          &none  &none      &none     &none     &none      &none
-&kp C_VOL_UP  &kp C_BRI_UP  &none       &none     &none       &none                          &none  &none      &none     &none     &none      &none
-&kp C_VOL_DN  &kp C_BRI_DN  &kp C_PREV  &kp C_PP  &kp C_NEXT  &none                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
-&kp C_MUTE    &none         &none       &none     &none       &none  &none         &none     &none  &none      &none     &none     &none      &none
-                                        &none     &none       &none  &kp C_STOP    &tog MED  &none  &none      &none
+&none         &none         &none       &none     &none       &none                        &none  &none      &none     &none     &none      &none
+&kp C_VOL_UP  &kp C_BRI_UP  &none       &none     &none       &none                        &none  &none      &none     &none     &none      &none
+&kp C_VOL_DN  &kp C_BRI_DN  &kp C_PREV  &kp C_PP  &kp C_NEXT  &none                        &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&kp C_MUTE    &none         &none       &none     &none       &none  &none         &none   &none  &none      &none     &none     &none      &none
+                                        &none     &none       &none  &kp C_STOP    &tog 4  &none  &none      &none
             >;
         };
 
@@ -288,11 +293,11 @@
         mou_layer {
             display-name = "5-MOU";
             bindings = <
-&none    &none      &none     &none     &none      &none                        &none     &none           &none           &none         &none            &none
-&none    &mkp MB4   &mkp MB3  &mkp MB2  &mkp MB1   &mkp MB5                     &none     &kp LG(X)       &kp LG(C)       &kp LG(V)     &kp LG(Z)        &none
-&none    &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                        &none     &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &none
-&to MOU  &none      &none     &none     &none      &none     &none    &none     &none     &msc SCRL_LEFT  &msc SCRL_DOWN  &msc SCRL_UP  &msc SCRL_RIGHT  &to MOU
-                              &none     &none      &none     &none    &mkp MB1  &mkp MB2  &tog MOU        &none
+&none  &none      &none     &none     &none      &none                        &none     &none           &none           &none         &none            &none
+&none  &mkp MB4   &mkp MB3  &mkp MB2  &mkp MB1   &mkp MB5                     &none     &kp LG(X)       &kp LG(C)       &kp LG(V)     &kp LG(Z)        &none
+&none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                        &none     &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &none
+&none  &none      &none     &none     &none      &none     &none    &none     &none     &msc SCRL_LEFT  &msc SCRL_DOWN  &msc SCRL_UP  &msc SCRL_RIGHT  &to 5
+                            &none     &none      &none     &none    &mkp MB1  &mkp MB2  &none           &tog 5
             >;
         };
 
@@ -304,11 +309,11 @@
         fun_layer {
             display-name = "6-FUN";
             bindings = <
-&none    &kp F16  &kp F17  &kp F18  &kp F19  &kp F20                  &none  &none      &none     &none     &none      &none
-&none    &kp F11  &kp F12  &kp F13  &kp F14  &kp F15                  &none  &none      &none     &none     &none      &none
-&none    &kp F6   &kp F7   &kp F8   &kp F9   &kp F10                  &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
-&to FUN  &kp F1   &kp F2   &kp F3   &kp F4   &kp F5   &none    &none  &none  &none      &none     &none     &none      &to FUN
-                           &none    &none    &none    &none    &none  &none  &none      &tog FUN
+&none      &kp F16  &kp F17  &kp F18  &kp F19  &kp F20                  &none  &none      &none     &none     &none      &ext_power EP_TOG
+&none      &kp F11  &kp F12  &kp F13  &kp F14  &kp F15                  &none  &none      &none     &none     &none      &none
+&none      &kp F6   &kp F7   &kp F8   &kp F9   &kp F10                  &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&kp GLOBE  &kp F1   &kp F2   &kp F3   &kp F4   &kp F5   &none    &none  &none  &none      &none     &none     &none      &none
+                             &none    &none    &none    &none    &none  &none  &none      &none
             >;
         };
 
@@ -316,33 +321,10 @@
         // LAYER 7 — LAYER7 (mirrored both sides — macOS window/app shortcuts)
         // ============================================================
         // tap outer-second thumb key for momentary, double-tap for lock
-
-        but_layer {
-            display-name = "7-BUT";
-            bindings = <
-&none  &kp LS(TAB)       &kp MAC_FINDPREV  &kp MAC_FINDNEXT  &kp TAB           &kp MAC_LAUNCHPAD                  &kp MAC_LAUNCHPAD  &kp LS(TAB)       &kp MAC_FINDPREV  &kp MAC_FINDNEXT  &kp TAB           &none
-&none  &kp MAC_PREVDESK  &kp MAC_WORDPREV  &kp MAC_WORDNEXT  &kp MAC_NEXTDESK  &kp MAC_APPWIN                     &kp MAC_APPWIN     &kp MAC_PREVDESK  &kp MAC_WORDPREV  &kp MAC_WORDNEXT  &kp MAC_NEXTDESK  &none
-&none  &kp LCTRL         &kp LALT          &kp LGUI          &kp LSHFT         &kp MAC_MSNCTRL                    &kp MAC_MSNCTRL    &kp RSHFT         &kp RGUI          &kp RALT          &kp RCTRL         &none
-&none  &kp MAC_UNDO      &kp MAC_CUT       &kp MAC_COPY      &kp MAC_PASTE     &kp MAC_SPOTLIGHT  &none    &none  &kp MAC_SPOTLIGHT  &kp MAC_PASTE     &kp MAC_COPY      &kp MAC_CUT       &kp MAC_UNDO      &none
-                                           &tog L7           &none             &none              &none    &none  &none              &none             &tog L7
-            >;
-        };
-
         // ============================================================
         // LAYER 8 — LAYER8 (system: bootloader/reset left, Bluetooth right)
         // ============================================================
         // tap outermost thumb key for momentary, double-tap for lock
-
-        sys_layer {
-            display-name = "8-SYS";
-            bindings = <
-&none        &none  &none  &none    &none  &none                              &none         &none         &none         &none         &none       &none
-&bootloader  &none  &none  &none    &none  &ext_power EP_TOG                  &none         &none         &none         &none         &none       &bootloader
-&sys_reset   &none  &none  &none    &none  &out OUT_TOG                       &none         &none         &none         &none         &none       &sys_reset
-&none        &none  &none  &none    &none  &kp C_PWR          &none    &none  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR  &kp C_PWR
-                           &tog L8  &none  &none              &none    &none  &none         &none         &tog L8
-            >;
-        };
     };
 };
 
