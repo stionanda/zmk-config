@@ -213,11 +213,11 @@
         main_layer {
             display-name = "0-BAS";
             bindings = <
-&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                            &kp N6       &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
-&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                             &kp Y        &kp U         &kp I        &kp O        &kp P            &kp MINUS
-&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                             &kp H        &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
-&kp BSLH   &kp Z         &kp X        &kp C        &kp V         &kp B       &none      &none      &kp N        &kp M         &kp COMMA    &kp DOT      &kp FSLH         &kp EQUAL
-                                      &tog 5       &to 3         &lt 1 BSPC  &kp ESC    &kp ENTER  &lt 2 SPACE  &tog 4        &tog 6
+&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                                           &kp N6       &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
+&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                                            &kp Y        &kp U         &kp I        &kp O        &kp P            &kp MINUS
+&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                                            &kp H        &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
+&kp BSLH   &kp Z         &kp X        &kp C        &kp V         &kp B       &hyper_left_key    &hyper_right_key  &kp N        &kp M         &kp COMMA    &kp DOT      &kp FSLH         &kp EQUAL
+                                      &tog 5       &to 3         &lt 1 BSPC  &kp ESC            &kp ENTER         &lt 2 SPACE  &tog 4        &tog 6
             >;
         };
 
@@ -229,11 +229,11 @@
         nav_layer {
             display-name = "1-NAV";
             bindings = <
-&mt LGUI GRAVE  &kp LG(N1)      &kp LG(N2)      &kp LG(N3)      &kp LG(N4)       &kp LG(N5)                  &none  &kp LS(TAB)   &kp LG(LS(G))  &kp LG(G)      &kp TAB        &none
-&mt LGUI TAB    &kp LG(Q)       &kp LG(W)       &kp LG(E)       &kp LG(R)        &kp LG(T)                   &none  &kp HOME      &kp PG_UP      &kp PG_DN      &kp END        &none
-&mt LGUI GRAVE  &mt LGUI LG(A)  &mt LALT LG(S)  &mt LGUI LG(D)  &mt LSHFT LG(F)  &kp LG(G)                   &none  &kp LEFT      &kp DOWN       &kp UP         &kp RIGHT      &none
-&none           &kp LG(Z)       &kp LG(X)       &kp LG(C)       &kp LG(V)        &kp LG(B)   &none    &none  &none  &kp LA(LEFT)  &kp LG(LEFT)   &kp LA(RIGHT)  &kp LG(RIGHT)  &kp GLOBE
-                                                &none           &none            &tog 0      &none    &none  &none  &none         &none
+&mt LGUI GRAVE  &kp LG(N1)      &kp LG(N2)      &kp LG(N3)      &kp LG(N4)       &kp LG(N5)                                       &none  &kp LS(TAB)   &kp LG(LS(G))  &kp LG(G)      &kp TAB        &none
+&mt LGUI TAB    &kp LG(Q)       &kp LG(W)       &kp LG(E)       &kp LG(R)        &kp LG(T)                                        &none  &kp HOME      &kp PG_UP      &kp PG_DN      &kp END        &none
+&mt LGUI GRAVE  &mt LGUI LG(A)  &mt LALT LG(S)  &mt LGUI LG(D)  &mt LSHFT LG(F)  &kp LG(G)                                        &none  &kp LEFT      &kp DOWN       &kp UP         &kp RIGHT      &none
+&none           &kp LG(Z)       &kp LG(X)       &kp LG(C)       &kp LG(V)        &kp LG(B)   &hyper_left_key    &hyper_right_key  &none  &kp LA(LEFT)  &kp LG(LEFT)   &kp LA(RIGHT)  &kp LG(RIGHT)  &kp GLOBE
+                                                &none           &none            &tog 1      &none              &none             &none  &none         &none
             >;
         };
 
@@ -249,7 +249,7 @@
 &kp TAB    &kp N1    &kp N2    &kp N3     &kp N4    &kp N5                          &none   &none      &none     &none     &none      &none
 &kp RET    &kp N6    &kp N7    &kp N8     &kp N9    &kp N0                          &none   &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
 &kp GLOBE  &kp LPAR  &kp PLUS  &kp MINUS  &kp RPAR  &kp DOT    &none       &none    &none   &none      &none     &none     &none      &kp EQUAL
-                               &none      &none     &kp COMMA  &kp BSPC    &kp RET  &tog 0  &none      &none
+                               &none      &none     &kp COMMA  &kp BSPC    &kp RET  &tog 2  &none      &none
             >;
         };
 
@@ -265,7 +265,7 @@
 &none  &none      &none     &none     &none      &none                   &kp AMPS   &kp LT    &kp EQUAL  &kp GT    &kp PIPE   &kp HASH
 &none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                   &kp LBKT   &kp LPAR  &kp COLON  &kp RPAR  &kp RBKT   &kp PRCNT
 &none  &none      &none     &none     &none      &none  &none    &none   &kp DLLR   &kp LBRC  &kp STAR   &kp RBRC  &kp CARET  &kp EXCL
-                            &none     &tog 0     &none  &none    &kp AT  &kp SPACE  &none     &none
+                            &none     &tog 3     &none  &none    &kp AT  &kp SPACE  &none     &none
             >;
         };
 
@@ -281,7 +281,7 @@
 &kp C_VOL_UP  &kp C_BRI_UP  &none       &none     &none       &none                       &none  &none      &none     &none     &none      &none
 &kp C_VOL_DN  &kp C_BRI_DN  &kp C_PREV  &kp C_PP  &kp C_NEXT  &none                       &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
 &kp C_MUTE    &none         &none       &none     &none       &none  &none         &none  &none  &none      &none     &none     &none      &none
-                                        &none     &none       &none  &kp C_STOP    &none  &none  &tog 0     &none
+                                        &none     &none       &none  &kp C_STOP    &none  &none  &tog 4     &none
             >;
         };
 
@@ -297,7 +297,7 @@
 &none  &mkp MB4   &mkp MB3  &mkp MB2  &mkp MB1   &mkp MB5                     &none     &kp LG(X)       &kp LG(C)       &kp LG(V)     &kp LG(Z)        &none
 &none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none                        &none     &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &none
 &none  &none      &none     &none     &none      &none     &none    &none     &none     &msc SCRL_LEFT  &msc SCRL_DOWN  &msc SCRL_UP  &msc SCRL_RIGHT  &kp GLOBE
-                            &tog 0    &none      &none     &none    &mkp MB1  &mkp MB2  &none           &none
+                            &tog 5    &none      &none     &none    &mkp MB1  &mkp MB2  &none           &none
             >;
         };
 
@@ -313,7 +313,7 @@
 &none      &kp F11  &kp F12  &kp F13  &kp F14  &kp F15                  &none  &none      &none     &none     &none      &none
 &none      &kp F6   &kp F7   &kp F8   &kp F9   &kp F10                  &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
 &kp GLOBE  &kp F1   &kp F2   &kp F3   &kp F4   &kp F5   &none    &none  &none  &none      &none     &none     &none      &none
-                             &none    &none    &none    &none    &none  &none  &none      &tog 0
+                             &none    &none    &none    &none    &none  &none  &none      &tog 6
             >;
         };
 
