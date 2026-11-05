@@ -213,11 +213,11 @@
         main_layer {
             display-name = "0-BAS";
             bindings = <
-&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                                           &kp N6       &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
-&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                                            &kp Y        &kp U         &kp I        &kp O        &kp P            &kp MINUS
-&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                                            &kp H        &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
-&kp BSLH   &kp Z         &kp X        &kp C        &kp V         &kp B       &hyper_left_key    &hyper_right_key  &kp N        &kp M         &kp COMMA    &kp DOT      &kp FSLH         &kp EQUAL
-                                      &tog 5       &to 3         &lt 1 BSPC  &kp ESC            &kp ENTER         &lt 2 SPACE  &tog 4        &tog 6
+&kp LBKT   &kp N1        &kp N2       &kp N3       &kp N4        &kp N5                               &kp N6     &kp N7        &kp N8       &kp N9       &kp N0           &kp RBKT
+&kp TAB    &kp Q         &kp W        &kp E        &kp R         &kp T                                &kp Y      &kp U         &kp I        &kp O        &kp P            &kp MINUS
+&kp GRAVE  &hml LCTRL A  &hml LALT S  &hml LGUI D  &hsl LSHFT F  &kp G                                &kp H      &hsr RSHFT J  &hmr RGUI K  &hmr RALT L  &hmr RCTRL SEMI  &kp SQT
+&kp BSLH   &kp Z         &kp X        &kp C        &kp V         &kp B          &to 1      &to 2      &kp N      &kp M         &kp COMMA    &kp DOT      &kp FSLH         &kp EQUAL
+                                      &to 5        &to 3         &kp BACKSPACE  &kp ESC    &kp ENTER  &kp SPACE  &to 4         &to 6
             >;
         };
 
@@ -229,11 +229,11 @@
         nav_layer {
             display-name = "1-NAV";
             bindings = <
-&mt LGUI GRAVE  &kp LG(N1)      &kp LG(N2)      &kp LG(N3)      &kp LG(N4)       &kp LG(N5)                                       &none  &kp LS(TAB)   &kp LG(LS(G))  &kp LG(G)      &kp TAB        &none
-&mt LGUI TAB    &kp LG(Q)       &kp LG(W)       &kp LG(E)       &kp LG(R)        &kp LG(T)                                        &none  &kp HOME      &kp PG_UP      &kp PG_DN      &kp END        &none
-&mt LGUI GRAVE  &mt LGUI LG(A)  &mt LALT LG(S)  &mt LGUI LG(D)  &mt LSHFT LG(F)  &kp LG(G)                                        &none  &kp LEFT      &kp DOWN       &kp UP         &kp RIGHT      &none
-&none           &kp LG(Z)       &kp LG(X)       &kp LG(C)       &kp LG(V)        &kp LG(B)   &hyper_left_key    &hyper_right_key  &none  &kp LA(LEFT)  &kp LG(LEFT)   &kp LA(RIGHT)  &kp LG(RIGHT)  &kp GLOBE
-                                                &none           &none            &to 0       &none              &none             &none  &none         &none
+&mt LGUI GRAVE  &kp LG(N1)        &kp LG(N2)        &kp LG(N3)        &kp LG(N4)         &kp LG(N5)                              &none      &kp LS(TAB)   &kp LG(LS(G))  &kp LG(G)      &kp TAB        &none
+&mt LGUI TAB    &kp LG(Q)         &kp LG(W)         &kp LG(E)         &kp LG(R)          &kp LG(T)                               &none      &kp HOME      &kp PG_UP      &kp PG_DN      &kp END        &none
+&mt LGUI GRAVE  &mt (LGUI) LG(A)  &mt (LALT) LG(S)  &mt (LGUI) LG(D)  &mt (LSHFT) LG(F)  &kp LG(G)                               &none      &kp LEFT      &kp DOWN       &kp UP         &kp RIGHT      &none
+&none           &kp LG(Z)         &kp LG(X)         &kp LG(C)         &kp LG(V)          &kp LG(B)      &to 0         &to 2      &none      &kp LA(LEFT)  &kp LG(LEFT)   &kp LA(RIGHT)  &kp LG(RIGHT)  &kp GLOBE
+                                                    &to 5             &to 3              &kp BACKSPACE  &kp ESCAPE    &kp ENTER  &kp SPACE  &to 4         &to 6
             >;
         };
 
@@ -245,11 +245,11 @@
         num_layer {
             display-name = "2-NUM";
             bindings = <
-&none      &kp LBKT  &kp STAR  &kp FSLH   &kp RBKT  &kp CARET                       &none  &none      &none     &none     &none      &none
+&kp LBKT   &kp LBKT  &kp STAR  &kp FSLH   &kp RBKT  &kp CARET                       &none  &none      &none     &none     &none      &kp RBKT
 &kp TAB    &kp N1    &kp N2    &kp N3     &kp N4    &kp N5                          &none  &none      &none     &none     &none      &none
-&kp RET    &kp N6    &kp N7    &kp N8     &kp N9    &kp N0                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
-&kp GLOBE  &kp LPAR  &kp PLUS  &kp MINUS  &kp RPAR  &kp DOT    &none       &none    &none  &none      &none     &none     &none      &kp EQUAL
-                               &none      &none     &kp COMMA  &kp BSPC    &kp RET  &to 0  &none      &none
+&kp ENTER  &kp N6    &kp N7    &kp N8     &kp N9    &kp N0                          &none  &kp RSHFT  &kp RGUI  &kp RALT  &kp RCTRL  &none
+&kp GLOBE  &kp LPAR  &kp PLUS  &kp MINUS  &kp RPAR  &kp DOT    &to 1       &to 2    &none  &none      &none     &none     &none      &kp EQUAL
+                               &to 5      &to 3     &kp COMMA  &kp BSPC    &kp RET  &to 0  &none      &none
             >;
         };
 
